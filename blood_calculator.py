@@ -99,6 +99,6 @@ def total_output(total_value, total_answer):
           .format(total_value, total_answer))
     return
 
-
-if __name__ == "__main__":
+  
+if __name__ == "__main__":    
     interface()
