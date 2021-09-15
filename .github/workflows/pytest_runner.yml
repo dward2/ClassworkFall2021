@@ -15,4 +15,4 @@ jobs:
       run:  pip install -r requirements.txt
     - name: Test with pytest
       run:
-        pytest -v --pycodestyle
+        pytest -v test_weight_entry.py
