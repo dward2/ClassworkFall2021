@@ -19,21 +19,22 @@ def print_patients_over_age(age, db):
 
 
 def get_patient(db, id_no):
-    for patient in db:
-        if patient["id_no"] == id_no:
-            return patient
-
+    patient = db[id_no]
+    #for patient in db:
+    #    if patient["id_no"] == id_no:
+    #        return patient
+    return patient
 
 def main():
-    db = []
+    db = {}
     x = create_database_entry("Ann Ables", 120, 30)
-    db.append(x)
+    db[x["id_no"]] = x
     x = create_database_entry("Bob Boyles", 24, 31)
-    db.append(x)
+    db[x["id_no"]] = x
     x = create_database_entry("Chris Chou", 33, 33)
-    db.append(x)
+    db[x["id_no"]] = x
     x = create_database_entry("David Dinkins", 14, 34)
-    db.append(x)
+    db[x["id_no"]] = x
     print(db)
 
     patient_id_tested = 24
@@ -41,6 +42,7 @@ def main():
 
     patient = get_patient(db, patient_id_tested)
     patient["tests"].append(test_done)
+    print(db)
     
     print_database(db)
 
