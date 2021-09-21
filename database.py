@@ -1,28 +1,24 @@
 def create_database_entry(patient_name, id_no, age):
     new_patient = {"name": patient_name, "id_no": id_no, 
                    "age": age, "tests": []}
-    #new_patient = [patient_name, id_no, age, []]
     return new_patient
 
 
 def print_database(db):
     locations = ["Room 1", "Room 4", "ER", "Post-Op"]
-    for patient, location in zip(db, locations):
-        print("{} - {}".format(patient,
+    for patient_id, location in zip(db, locations):
+        print("{} - {}".format(db[patient_id]["name"],
                                location))
 
 
 def print_patients_over_age(age, db):
-    for patient in db:
-        if patient[2] > age:
-            print(patient[0])
+    for patient_id in db:
+        if db[patient_id]["age"] > age:
+            print(db[patient_id]["name"])
 
 
 def get_patient(db, id_no):
     patient = db[id_no]
-    #for patient in db:
-    #    if patient["id_no"] == id_no:
-    #        return patient
     return patient
 
 def main():
