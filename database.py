@@ -30,9 +30,10 @@ def print_database(db):
 
 
 def print_patients_over_age(age, db):
-    for patient in db:
-        if patient.age > age:
-            print(patient.name)
+    print("Patients above age {}".format(age))
+    for patient_id in db:
+        if db[patient_id].age > age:
+            print(db[patient_id].name)
 
 
 def get_patient(db, id_no):
@@ -60,6 +61,7 @@ def main():
     print(db[24].tests)
     
     print_database(db)
+    print_patients_over_age(21, db)
 
 
 if __name__ == "__main__":
