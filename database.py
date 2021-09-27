@@ -6,16 +6,15 @@ class Patient:
         self.age = age
         self.tests = []
 
-        
     def __repr__(self):
         return "{}: {}".format(self.id_no, self.name)
-        
+
     def is_adult(self):
         if self.age >= 21:
             return True
         else:
             return False
-        
+
 
 def create_database_entry(patient_name, id_no, age):
     new_patient = Patient(patient_name, id_no, age)
@@ -40,6 +39,7 @@ def get_patient(db, id_no):
     patient = db[id_no]
     return patient
 
+
 def main():
     db = {}
     x = create_database_entry("Ann Ables", 120, 30)
@@ -59,7 +59,7 @@ def main():
     patient.tests.append(test_done)
     print(patient.is_adult())
     print(db[24].tests)
-    
+
     print_database(db)
     print_patients_over_age(21, db)
 
