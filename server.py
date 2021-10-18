@@ -16,19 +16,18 @@ def info():
     return my_output
 
 
-@app.route("/hdl/<hdl_value>", methods=["GET"])
-def hdl_analysis_server(hdl_value):
+@app.route("/hdl", methods=["POST"])
+def hdl_analysis_server():
     """
     Input should look like {"hdl": 50, "patient_id": 200}
 
     :return:
     """
-    # in_data = request.get_json()
-    # hdl_value = in_data["hdl"]
-    hdl_value = int(hdl_value)
+    in_data = request.get_json()
+    hdl_value = in_data["hdl"]
     print("The hdl_value is {}".format(hdl_value))
     answer = hdl_analysis(hdl_value)
-    return jsonify(answer), 201
+    return jsonify(answer), 200
 
 
 @app.route("/say_hello/<input_name>/<last_name>", methods=["GET"])
