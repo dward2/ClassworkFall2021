@@ -2,7 +2,7 @@ import requests
 
 server_name = "https://api.github.com/"
 
-r = requests.get(server_name +"repos/dward2/BME547/branches")
+r = requests.get(server_name + "repos/dward2/BME547/branches")
 
 print(r)
 print(type(r))
