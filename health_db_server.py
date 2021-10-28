@@ -27,17 +27,14 @@ def initialize_server():
 
     This function initializes the server log as well as creates a connection
     with the MongoDB database.  User will need to edit the connection string
-    to match their specific MongoDB connect string.  In order to prevent
-    pushing the database access password to GitHub where others might be able
-    to find it, the database user name and password are stored in a separate
-    file that is not committed to the repository.  This secret file should
-    also be added to the ".gitignore" file to ensure it isn't accidentally
-    committed.  This secret file consists of two lines as follows:
-
-        MONGO_DB_USER_NAME = "<user_name>"
-        MONGO_DB_PASSWORD = "<password>"
-
-    where <user_name> and <password> are replaced with the appropriate text.
+    to match their specific MongoDB connect string.  If you are posting to a
+    public repository, you would want to make sure that your MongoDB database
+    access ID and password were not stored in the code but rather protected
+    in a file or environment variable that is not pushed to GitHub.  Since this
+    example code will be in a public repository, I have removed this
+    information.  But, as your code will be in a private GitHub Classroom
+    repository, you can include your information as it will be necessary
+    for the GitHub Actions tests.
 
     Note:  Just because the `connect` function completes does not ensure that
     the connection was actually made.  You will need to check that data is
@@ -45,12 +42,10 @@ def initialize_server():
 
     Note:  This function does not need a unit test.
     """
-    from secrets_do_not_commit import MONGO_DB_USER_NAME, MONGO_DB_PASSWORD
     logging.basicConfig(filename="health_db_server.log", level=logging.DEBUG)
     print("Connecting to MongoDB...")
-    connect("mongodb+srv://{}:{}@bme547.ba348.mongodb.net/health_db"
-            "?retryWrites=true&w=majority".format(MONGO_DB_USER_NAME,
-                                                  MONGO_DB_PASSWORD))
+    connect("mongodb+srv://<userid>:<pswd>@bme547.ba348.mongodb.net/health_db"
+            "?retryWrites=true&w=majority")
     print("Connection attempt finished.")
 
 

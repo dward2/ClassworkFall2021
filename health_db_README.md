@@ -5,36 +5,13 @@ The file `health_db_server.py` contains server code for the implementation
 of a MondoDB database using the PyMODM package.  Here, I will describe how the
 code was modified for use with MongoDB/PyMODM.
 
-## Connection to MongoDB and Password Security
+## Connection to MongoDB
 The connection to MongoDB is established using the `connect` function imported
 from `pymodm`.  I have placed this `connect` call in the `initialize_server()`
 function.  While it could also be placed in the global section of the module
 (similar to where the `app = Flask(__name__)` statement is placed), it can
 be advantageous to keep it in a function so that your test module could 
 make a separate connection to a test database (see below for more info).
-
-If you include your database access id and password in your connect string and
-then push this code to GitHub, you are exposing this id and password to anyone
-who has access to your repository.  For security, it is better to put the
-id and password into a separate file that exists locally on your computer but
-is not committed to the repository and pushed to GitHub.  While there are a
-variety of approaches to doing this, I have taken the simple route of creating
-a separate python module file that contains two variables with the id and 
-password.  I then import those variables into my server code and add the
-variables into my connect string.  I make sure that
-the python module with the secrets is not committed to the repository by adding
-the file name to the `.gitignore` file.  
-
-Note that when I next clone this repository on another computer in order to
-deploy this server, I will need to manually copy the file with the secret
-information.  
-
-Note that if you had originally had your secret information in the connect
-string, committed that to your repository, and then later changed it to hide
-the information, the original string will still exist in your repository 
-history for someone to find.  While this information is not highly critical
-and there is no need for such security concerns for this homework or this
-database, when it is important, plan for it from the beginning.
 
 ## Adding a new entry to database
 The `Patient` class, derived from `MongoModel`, defines what our database
