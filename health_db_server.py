@@ -187,10 +187,10 @@ def add_test():
     error_string, status_code = validate_server_input(in_data, expected_keys)
     if error_string is not True:
         return error_string, status_code
-    patient = find_patient(in_data["id"])
-    if patient is False:
+    does_patient_exist = find_patient(in_data["id"])
+    if does_patient_exist is False:
         return "Patient ID {} not found in database".format(in_data["id"]), 400
-    add_test_result(patient, in_data)
+    add_test_result(in_data)
     return "Added test to patient id {}".format(in_data["id"]), 200
 
 
@@ -217,22 +217,26 @@ def find_patient(id_no):
     return patient
 
 
-def add_test_result(patient, in_data):
-    """Add test data to patient record
+def add_test_result(in_data):
+    """Add test data to patient record, updated for MONGODB/PyMODM
 
-    This function formats a tuple containing the test name and result and
-    appends it to the tests list of the patient dictionary.
+    This function formats a tuple containing the test name and result.  Then,
+    it calls the function to obtain the patient document from the MongoDB
+    database.  Then, it appends the created tuple to the tests list of the
+    patient document.  The updated patient record is then saved to the MongoDB
+    database and returned.
 
     Args:
-        patient (dict): patient data
-        in_data (dict):  dictionary containing test name and result
+        in_data (dict):  dictionary containing patient id, test name and result
 
     Returns:
-        dict, the updated patient dictionary, for testing purposes only
+        Patient: the updated patient document, for testing purposes
 
     """
     test_data_to_add = (in_data["test_name"], in_data["test_result"])
+    patient = find_patient(in_data["id"])
     patient.tests.append(test_data_to_add)
+    patient.save()
     return patient
 
 

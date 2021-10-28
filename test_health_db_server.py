@@ -21,3 +21,14 @@ def test_find_patient():
     answer = find_patient(expected_id)
     assert answer.id == expected_id
     assert answer.name == expected_name
+
+
+def test_add_test_result():
+    from health_db_server import add_test_result
+    from health_db_server import add_database_entry
+    add_database_entry("David Testing", 12345, "O+")
+    out_data = {"id": 12345, "test_name": "HDL", "test_result": 123}
+    answer = add_test_result(out_data)
+    # answer.delete()
+    assert answer.tests[-1] == ("HDL", 123)
+
