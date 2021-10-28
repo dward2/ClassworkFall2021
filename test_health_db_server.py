@@ -46,6 +46,14 @@ def test_find_patient():
     assert answer.name == expected_name
 
 
+def test_find_patient_missing():
+    from health_db_server import find_patient
+    from health_db_server import add_database_entry
+    expected_id = 56451897
+    answer = find_patient(expected_id)
+    assert answer is False
+
+
 def test_add_test_result():
     from health_db_server import add_test_result
     from health_db_server import add_database_entry
