@@ -1,4 +1,3 @@
-from health_db_server import db
 from health_db_server import initialize_server
 
 initialize_server()
@@ -6,10 +5,10 @@ initialize_server()
 
 def test_add_database_entry():
     from health_db_server import add_database_entry
-    expected_name = "David"
+    expected_name = "David Testing"
     answer = add_database_entry(expected_name, 5, "O+")
-    print(answer)
-    answer.delete()
+    answer.delete()  # This deletes the entry in the database, it does not
+    # delete the answer variable
     assert answer.name == expected_name
 
 

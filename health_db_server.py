@@ -6,16 +6,49 @@ from pymodm import connect, MongoModel, fields
 # Define variable to contain Flask class for server
 app = Flask(__name__)
 
-# Create database as an empty list
-db = []
+
+class Patient(MongoModel):
+    """ Database format for a Patient Record
+
+    This class defines the MongoModel database entry for the Patient database.
+    The fields are self-descriptive.  It is used for accessing the MongoDB
+    database through the PyMODM package.
+
+    """
+    name = fields.CharField()
+    id = fields.IntegerField(primary_key=True)
+    blood_type = fields.CharField()
+    tests = fields.ListField()
 
 
 def initialize_server():
+    """ Initializes server conditions
+
+    This function initializes the server log as well as creates a connection
+    with the MongoDB database.  User will need to edit the connection string
+    to match their specific MongoDB connect string.  In order to prevent
+    pushing the database access password to GitHub where others might be able
+    to find it, the database user name and password are stored in a separate
+    file that is not committed to the repository.  This secret file should
+    also be added to the ".gitignore" file to ensure it isn't accidentally
+    committed.  This secret file consists of two lines as follows:
+
+        MONGO_DB_USER_NAME = "<user_name>"
+        MONGO_DB_PASSWORD = "<password>"
+
+    where <user_name> and <password> are replaced with the appropriate text.
+
+    Note:  Just because the `connect` function completes does not ensure that
+    the connection was actually made.  You will need to check that data is
+    successfully stored in your MongoDB database.
+    """
+    from secrets_do_not_commit import MONGO_DB_USER_NAME, MONGO_DB_PASSWORD
     logging.basicConfig(filename="health_db_server.log", level=logging.DEBUG)
     print("Connecting to MongoDB...")
-    connect("mongodb+srv://daw:jzuHZP0u69vyfskG@bme547.ba348.mongodb.net/"
-            "health_db?retryWrites=true&w=majority")
-    print("Connected.")
+    connect("mongodb+srv://{}:{}@bme547.ba348.mongodb.net/health_db"
+            "?retryWrites=true&w=majority".format(MONGO_DB_USER_NAME,
+                                                  MONGO_DB_PASSWORD))
+    print("Connection attempt finished.")
 
 
 @app.route("/", methods=["GET"])
@@ -97,26 +130,19 @@ def validate_server_input(in_data, expected_keys):
     return True, 200
 
 
-class Patient(MongoModel):
-    name = fields.CharField()
-    id = fields.IntegerField(primary_key=True)
-    blood_type = fields.CharField()
-    tests = fields.ListField()
-
-
 def add_database_entry(patient_name, id_no, blood_type):
-    """Creates new patient database entry
+    """Creates new patient database entry, updated for MongoDB/PyMODM
 
-    This function receives information about the patient, creates a dictionary,
-    and appends that dictionary to the database list.  The patient dictionary
-    has the following format:
+    This function receives information about the patient, creates an instance
+    of the Patient class for saving the data into a MongoDB database using the
+    PyMODM package, and saves that data set into the database.  Note that only
+    the `name`, `id` and `blood_type` fields are initialized.  Since the
+    `tests` list is empty, there is no need to initialize it here.  In fact,
+    doing so causes problems later.
 
-    {"name": str, "id_no": int, "blood_type": str, "tests": list}
-
-    The "tests" list is initialized as an empty list while the values for the
-    other keys are taken from the input parameters.  After the new patient
-    is added, the database is printed to the console for debugging purposes.
-    The created dictionary is returned to enable this function to be tested.
+    If the save to the database is successful, an instance of Patient
+    containing the data saved to the database is created in the `answer`
+    variable which is returned.
 
     Args:
         patient_name (str): name of patient
@@ -124,7 +150,7 @@ def add_database_entry(patient_name, id_no, blood_type):
         blood_type (str):  patient blood type, ex. "AB+"
 
     Returns:
-        dict: the patient database entry
+        Patient: contains the data saved to database
 
     """
     patient_to_add = Patient(name=patient_name,
