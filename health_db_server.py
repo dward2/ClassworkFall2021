@@ -1,3 +1,4 @@
+import pymodm.errors
 from flask import Flask, request, jsonify
 import logging
 from pymodm import connect, MongoModel, fields
@@ -194,24 +195,26 @@ def add_test():
 
 
 def find_patient(id_no):
-    """Retrieves patient record from database based on patient id
+    """Retrieves patient record from database based on patient id, Updated for
+    MongoDB/PyMODM
 
-    This function iterates through the database list and checks the "id" key
-    of each patient dictionary against the "id_no" parameter.  If a match is
-    found, that patient dictionary is returned.  If no match is found, the
+    This function searches the MongoDB "Patient" database for the record
+    with an "id" of that given as the "id_no" parameter.  If a match is
+    found, that Patient instance is returned.  If no match is found, the
     boolean False is returned.
 
     Args:
         id_no (int): id number of patient to be found in database
 
     Returns:
-        dict or bool: patient dictionary if patient found in database, False
+        Patient or bool: Patient instance if patient found in database, False
             if not
     """
-    for patient in db:
-        if patient["id"] == id_no:
-            return patient
-    return False
+    try:
+        patient = Patient.objects.raw({"_id": id_no}).first()
+    except pymodm.errors.DoesNotExist:
+        patient = False
+    return patient
 
 
 def add_test_result(patient, in_data):
