@@ -248,23 +248,24 @@ def get_results(patient_id):
     patient id number is included as part of the URL.  The function calls a
     validation function to ensure that the given id is an integer and that the
     patient exists in the database.  If the validation passes, the function
-    calls a function to retrieve the patient record and returns it to the
-    caller with a status code of 200.  If the validation fails, an appropriate
-    message is returned with a status code of 400.
+    calls a function to that generates a string with the patient results
+    and returns that string to the caller with a status code of 200.  If the
+    validation fails, an appropriate message is returned with a status code
+    of 400.
 
     Args:
         patient_id (str): the patient id taken from the variable URL
 
     Returns:
-        str or dict , int: An error message string if patient_id was invalid
-            or a dictionary containing the patient data, plus a status code.
+        str, int: An error message if patient_id was invalid or a results
+        string containing the patient data, plus a status code.
 
     """
     validation_response, status_code = validate_patient_id(patient_id)
     if status_code != 200:
         return validation_response, status_code
-    patient = find_patient(validation_response)
-    return jsonify(patient), 200
+    results = generate_results(validation_response)
+    return results, 200
 
 
 def validate_patient_id(patient_id):
@@ -295,6 +296,28 @@ def validate_patient_id(patient_id):
     if patient is False:
         return "Patient id of {} does not exist in database".format(id_no), 400
     return id_no, 200
+
+
+def generate_results(patient_id):
+    """ Create string the summarizes patient test results
+
+    This function obtains the patient document from the database by calling
+    the find_patient function.  A formatted string is then created that
+    contains the patient name and list of their test results.
+
+    Args:
+        patient_id (int): the id number of the patient for whom to get results
+
+    Returns:
+        string: summary of patient test results
+
+    """
+    patient = find_patient(patient_id)
+    results = "Patient Name: {}\n".format(patient.name)
+    results += "Test Results:\n"
+    for test in patient.tests:
+        results += "{}\n".format(test)
+    return results
 
 
 if __name__ == '__main__':
