@@ -42,6 +42,8 @@ def initialize_server():
     Note:  Just because the `connect` function completes does not ensure that
     the connection was actually made.  You will need to check that data is
     successfully stored in your MongoDB database.
+
+    Note:  This function does not need a unit test.
     """
     from secrets_do_not_commit import MONGO_DB_USER_NAME, MONGO_DB_PASSWORD
     logging.basicConfig(filename="health_db_server.log", level=logging.DEBUG)
