@@ -63,13 +63,13 @@ This test is pretty straight forward and does not involve MongoDB.
 
 ### `test_add_database_entry`
 When needing to test a function that does MongoDB interactions, you generally
-follow these steps:
-a. establish a database connection
-b. set-up the database contents as needed to run test
-c. call the function to be tested
+follow these steps:<br>
+a. establish a database connection<br>
+b. set-up the database contents as needed to run test<br>
+c. call the function to be tested<br>
 d. erase any database entries made for the test so it does not interfere with
-  other tests or your production database
-e. make an `assert` statement to check for the correct outcome.
+  other tests or your production database<br>
+e. make an `assert` statement to check for the correct outcome.<br>
 
 a. The connection to the database is established at the top of the testing module
 by calling the `health_db_server.initialize_server()` function.  This will
