@@ -1,5 +1,6 @@
 from pymodm import MongoModel, fields
 
+
 class Patient(MongoModel):
     """ Database format for a Patient Record
 

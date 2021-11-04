@@ -15,7 +15,10 @@ make a separate connection to a test database (see below for more info).
 
 ## Adding a new entry to database
 The `Patient` class, derived from `MongoModel`, defines what our database
-entry will look like.  The function `add_database_entry()` now creates an 
+entry will look like.  This `Patient` class is defined in its own module called
+`database_definitions.py` so it can be imported into any number of other
+modules without causing class naming issues.  The function 
+`add_database_entry()` now creates an 
 instance of the `Patient` class and initializes the contents of the `name`,
 `id`, and `blood_type` fields.  Since no initial values are to be put in the
 `tests` list field, it is not given a value in the call to `Patient`.  However,
