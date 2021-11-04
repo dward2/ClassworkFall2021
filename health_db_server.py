@@ -2,24 +2,11 @@ import pymodm.errors
 from flask import Flask, request, jsonify
 import logging
 from pymodm import connect, MongoModel, fields
+from database_definitions import Patient
 
 
 # Define variable to contain Flask class for server
 app = Flask(__name__)
-
-
-class Patient(MongoModel):
-    """ Database format for a Patient Record
-
-    This class defines the MongoModel database entry for the Patient database.
-    The fields are self-descriptive.  It is used for accessing the MongoDB
-    database through the PyMODM package.
-
-    """
-    name = fields.CharField()
-    id = fields.IntegerField(primary_key=True)
-    blood_type = fields.CharField()
-    tests = fields.ListField()
 
 
 def initialize_server():
