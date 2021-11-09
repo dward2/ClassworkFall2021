@@ -1,7 +1,40 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog, messagebox
+from PIL import Image, ImageTk
 
 from health_db_client import add_patient_to_server
+
+
+def load_and_resize_image(filename):
+    """ Creates a tkinter image variable that can be displayed on GUI
+
+    This function receives a filename as a parameter.  This should be the
+    name of a file containing a digital image.  The file is first open
+    and stored as a Pillow image file.  It uses the Image.size property and
+    Image.resize() method to decrease the image size by 50%.  It then
+    converts the Pillow image to a tk image.
+
+    Note, while this code is written to decrease the size by 50%, a better
+    approach may be to determine the aspect ratio of the picture and then
+    adjust its size up or down to reach a default size.
+
+    Args:
+        filename (str): the name of the file containing an image to be loaded
+
+    Returns:
+        Pillow.ImageTk.PhotoImage: a tk-compatible image variable
+
+
+    """
+    pil_image = Image.open(filename)
+    original_size = pil_image.size
+    adj_factor = 0.5
+    new_width = round(original_size[0] * adj_factor)
+    new_height = round(original_size[1] * adj_factor)
+    resized_image = pil_image.resize((new_width, new_height))
+    tk_image = ImageTk.PhotoImage(resized_image)
+    return tk_image
 
 
 def create_output(name, id, blood_letter, rh_factor, center):
@@ -84,6 +117,25 @@ def design_window():
         """
         root.destroy()
 
+    def change_picture_cmd():
+        """Allows user to select a new image to display
+
+        This function opens a dialog box to allow the user to choose an image
+        file.  If the user does not cancel the dialog box, the chosen filename
+        is sent to an external function for opening and resizing.  The
+        returned image is then added to the image_label widget for display
+        on the GUI.
+
+        """
+        filename = filedialog.askopenfilename(initialdir="images")
+        if filename == "":
+            messagebox.showinfo("Cancel", "You cancelled the image load")
+            return
+        tk_image = load_and_resize_image(filename)
+        image_label.configure(image=tk_image)
+        image_label.image = tk_image  # Stores image as part of widget to
+        # prevent garbage collection and loss of image
+
     root = tk.Tk()
     root.title("Health Database GUI")
     # root.geometry("10x2")
@@ -137,6 +189,16 @@ def design_window():
 
     cancel_button = ttk.Button(root, text="Cancel", command=cancel_cmd)
     cancel_button.grid(column=2, row=6)
+
+    # Creates a place holder for an image.
+    tk_image = load_and_resize_image("images/blank_pic.jpeg")
+    image_label = ttk.Label(root, image=tk_image)
+    image_label.grid(column=0, row=7)
+
+    # Creates a button to allow user to change the image
+    change_picture_btn = ttk.Button(root, text="Change Picture",
+                                    command=change_picture_cmd)
+    change_picture_btn.grid(column=1, row=7)
 
     root.mainloop()
 
