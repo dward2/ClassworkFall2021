@@ -192,7 +192,7 @@ def design_window():
 
     # Creates a place holder for an image.
     tk_image = load_and_resize_image("images/blank_pic.jpeg")
-    image_label = ttk.Label(root, image=tk_image)
+    image_label = ttk.Label(root)
     image_label.grid(column=0, row=7)
 
     # Creates a button to allow user to change the image
