@@ -4,6 +4,7 @@ import os
 
 server_name = "http://vcm-21170.vm.duke.edu"
 
+
 def send_image_to_server(filename):
     b64_string = convert_image_file_to_b64_string(filename)
     reply = send_b64_string_to_server(b64_string)
@@ -20,7 +21,7 @@ def convert_image_file_to_b64_string(filename):
 def send_b64_string_to_server(b64_string):
     out_json = {"image": b64_string,
                 "net_id": "daw74",
-                "id_no": 2}
+                "id_no": 1}
     r = requests.post(server_name+"/add_image",
                       json=out_json)
     if r.status_code != 200:
@@ -28,6 +29,7 @@ def send_b64_string_to_server(b64_string):
         return False
     else:
         print(r.text)
+
 
 def get_image_from_server(net_id, id_no):
     r = requests.get(server_name+"/get_image/{}/{}".format(net_id, id_no))
@@ -41,3 +43,4 @@ if __name__ == '__main__':
     fn = os.path.join("images", "blue_devil.jpeg")
     send_image_to_server(fn)
 
+    get_image_from_server("daw74", 1)
